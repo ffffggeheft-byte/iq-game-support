@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | الإدارة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans">
+
+    <div class="container mx-auto p-4 max-w-3xl mt-10">
+        <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+            <h1 class="text-3xl font-bold text-cyan-400"><i class="fa-solid fa-terminal ml-2"></i>لوحة الإدارة</h1>
+            <button id="logout-btn" class="bg-red-900/50 hover:bg-red-600 text-red-200 border border-red-800 px-4 py-2 rounded-lg font-bold transition">تسجيل الخروج</button>
+        </div>
+
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
+            <h2 class="text-xl font-bold mb-6 border-r-4 border-cyan-500 pr-3">نشر محتوى جديد في الموقع</h2>
+            
+            <form id="publish-form" class="space-y-5">
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">نوع المحتوى</label>
+                    <select id="type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500">
+                        <option value="app">تطبيق / أداة (APK)</option>
+                        <option value="video">فيديو (شروحات البرمجة والاختراق)</option>
+                        <option value="article">مقال أو ثغرة</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">عنوان المحتوى</label>
+                    <input type="text" id="title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" required placeholder="مثال: تطبيق IQ++ الإصدار الجديد">
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">الوصف التفصيلي</label>
+                    <textarea id="description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" required placeholder="اكتب تفاصيل الأداة، أو محتوى المقال هنا..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">رابط التحميل أو المشاهدة (Google Play / GitHub / YouTube)</label>
+                    <input type="url" id="link" class="w-full bg-slate-950 text-left border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" dir="ltr" placeholder="https://..." required>
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition mt-4"><i class="fa-solid fa-cloud-arrow-up ml-2"></i>نشر للموقع العام</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRzFck1Z5peOL7pYpuG7hUeyZUoycgCEU",
+            authDomain: "hussein-salman.firebaseapp.com",
+            projectId: "hussein-salman",
+            storageBucket: "hussein-salman.firebasestorage.app",
+            messagingSenderId: "862323992221",
+            appId: "1:862323992221:web:009cfd696d6f4142e91674",
+            measurementId: "G-GSVSR1HBKR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // طرد أي شخص يحاول فتح الصفحة بدون تسجيل دخول
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'admin-login.html';
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = 'admin-login.html');
+        });
+
+        document.getElementById('publish-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = 'جاري النشر... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const contentData = {
+                type: document.getElementById('type').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                link: document.getElementById('link').value,
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                // حفظ البيانات في قاعدة البيانات تحت مسار 'portfolio_posts'
+                await addDoc(collection(db, "portfolio_posts"), contentData);
+                alert("تم النشر بنجاح! محتواك متاح الآن للجميع في الصفحة الرئيسية.");
+                e.target.reset();
+            } catch (error) {
+                alert("حدث خطأ: " + error.message);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up ml-2"></i>نشر للموقع العام';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -9,13 +9,14 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans">
 
-    <div class="container mx-auto p-4 max-w-3xl mt-10">
+    <div class="container mx-auto p-4 max-w-3xl mt-10 pb-20">
         <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
             <h1 class="text-3xl font-bold text-cyan-400"><i class="fa-solid fa-terminal ml-2"></i>لوحة الإدارة</h1>
             <button id="logout-btn" class="bg-red-900/50 hover:bg-red-600 text-red-200 border border-red-800 px-4 py-2 rounded-lg font-bold transition">تسجيل الخروج</button>
         </div>
 
-        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
+        <!-- قسم إضافة محتوى جديد -->
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 mb-8 shadow-lg">
             <h2 class="text-xl font-bold mb-6 border-r-4 border-cyan-500 pr-3">نشر محتوى جديد في الموقع</h2>
             
             <form id="publish-form" class="space-y-5">
@@ -38,21 +39,32 @@
                     <textarea id="description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" required placeholder="اكتب تفاصيل الأداة، أو محتوى المقال هنا..."></textarea>
                 </div>
 
+                <!-- لاحظ أننا أزلنا كلمة required من هنا ليصبح الرابط اختيارياً -->
                 <div>
-                    <label class="block text-slate-400 mb-1 text-sm">رابط التحميل أو المشاهدة (Google Play / GitHub / YouTube)</label>
-                    <input type="url" id="link" class="w-full bg-slate-950 text-left border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" dir="ltr" placeholder="https://..." >
+                    <label class="block text-slate-400 mb-1 text-sm">رابط التحميل أو المشاهدة (اختياري للمقالات)</label>
+                    <input type="url" id="link" class="w-full bg-slate-950 text-left border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" dir="ltr" placeholder="https://...">
                 </div>
 
                 <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition mt-4"><i class="fa-solid fa-cloud-arrow-up ml-2"></i>نشر للموقع العام</button>
             </form>
+        </div>
+
+        <!-- القسم الجديد: إدارة المحتوى المنشور (الحذف) -->
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
+            <h2 class="text-xl font-bold mb-6 border-r-4 border-red-500 pr-3">إدارة المحتوى المنشور</h2>
+            <div id="admin-posts-container" class="space-y-3">
+                <p class="text-slate-500 text-center"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب المنشورات...</p>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // تمت إضافة دوال جديدة هنا: doc, deleteDoc, getDocs, query, orderBy
+        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // *** مفاتيحك الخاصة ***
         const firebaseConfig = {
             apiKey: "AIzaSyDRzFck1Z5peOL7pYpuG7hUeyZUoycgCEU",
             authDomain: "hussein-salman.firebaseapp.com",
@@ -67,17 +79,21 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // طرد أي شخص يحاول فتح الصفحة بدون تسجيل دخول
+        // التحقق من تسجيل الدخول وجلب المنشورات
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'admin-login.html';
+            } else {
+                loadAdminPosts(); // استدعاء دالة جلب المنشورات بمجرد الدخول
             }
         });
 
+        // تسجيل الخروج
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => window.location.href = 'admin-login.html');
         });
 
+        // دالة نشر محتوى جديد
         document.getElementById('publish-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -93,10 +109,10 @@
             };
 
             try {
-                // حفظ البيانات في قاعدة البيانات تحت مسار 'portfolio_posts'
                 await addDoc(collection(db, "portfolio_posts"), contentData);
-                alert("تم النشر بنجاح! محتواك متاح الآن للجميع في الصفحة الرئيسية.");
+                alert("تم النشر بنجاح!");
                 e.target.reset();
+                loadAdminPosts(); // تحديث قائمة المنشورات فوراً بعد النشر
             } catch (error) {
                 alert("حدث خطأ: " + error.message);
             } finally {
@@ -104,6 +120,73 @@
                 btn.disabled = false;
             }
         });
+
+        // ==========================================
+        // الدالة الجديدة: جلب وعرض المنشورات مع زر الحذف
+        // ==========================================
+        async function loadAdminPosts() {
+            const container = document.getElementById('admin-posts-container');
+            try {
+                const q = query(collection(db, "portfolio_posts"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                container.innerHTML = ''; // مسح علامة التحميل
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p class="text-slate-500 text-center py-4">لا توجد منشورات حالياً.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((documentSnap) => {
+                    const data = documentSnap.data();
+                    const postId = documentSnap.id; // المعرف السري للمقال في قاعدة البيانات
+                    
+                    // ترجمة نوع المحتوى ليكون مفهوماً
+                    let typeAr = data.type === 'app' ? 'تطبيق' : data.type === 'video' ? 'فيديو' : 'مقال';
+
+                    // إنشاء شريط المنشور
+                    const postElement = document.createElement('div');
+                    postElement.className = "flex justify-between items-center bg-slate-950 border border-slate-800 p-4 rounded-lg";
+                    postElement.innerHTML = `
+                        <div class="overflow-hidden">
+                            <h3 class="font-bold text-white text-lg truncate">${data.title}</h3>
+                            <span class="text-xs text-slate-400">${typeAr}</span>
+                        </div>
+                        <button class="delete-btn bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white border border-red-900 hover:border-red-600 px-3 py-2 rounded transition ml-2 shrink-0" data-id="${postId}">
+                            <i class="fa-solid fa-trash-can"></i> حذف
+                        </button>
+                    `;
+                    container.appendChild(postElement);
+                });
+
+                // تفعيل أزرار الحذف بعد إنشائها
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const idToDelete = e.currentTarget.getAttribute('data-id');
+                        
+                        // رسالة تأكيد قبل الحذف الفعلي
+                        if (confirm("هل أنت متأكد من حذف هذا المحتوى نهائياً؟ لن تتمكن من التراجع.")) {
+                            e.currentTarget.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                            e.currentTarget.disabled = true;
+                            
+                            try {
+                                // أمر الحذف من قاعدة بيانات Firebase
+                                await deleteDoc(doc(db, "portfolio_posts", idToDelete));
+                                loadAdminPosts(); // إعادة تحميل القائمة لتختفي فوراً
+                            } catch (error) {
+                                alert("خطأ في الحذف: " + error.message);
+                                e.currentTarget.innerHTML = '<i class="fa-solid fa-trash-can"></i> حذف';
+                                e.currentTarget.disabled = false;
+                            }
+                        }
+                    });
+                });
+
+            } catch (error) {
+                container.innerHTML = '<p class="text-red-500 text-center py-4">حدث خطأ في تحميل المنشورات.</p>';
+                console.error(error);
+            }
+        }
     </script>
 </body>
 </html>

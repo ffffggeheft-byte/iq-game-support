@@ -105,6 +105,7 @@
                     }
 
                     // بناء كارت المنشور
+                    // ... (بداية كود بناء الكارت كما هو في ملفك الحالي) ...
                     let card = `
                         <div class="post-card bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between hover:border-cyan-700 transition duration-300 shadow-sm">
                             <div class="mb-4">
@@ -114,10 +115,22 @@
                                     </span>
                                 </div>
                                 <h3 class="font-bold text-xl text-white mb-2 leading-tight">${data.title}</h3>
-                                <p class="text-slate-400 text-sm leading-relaxed">${data.description}</p>
+                                <!-- قمنا بتقليل النص المعروض في الرئيسية ليصبح مقتطفاً صغيراً -->
+                                <p class="text-slate-400 text-sm leading-relaxed line-clamp-3">${data.description}</p>
                             </div>
                     `;
 
+                    // التعديل هنا: توجيه كل الأنواع إلى صفحة article.html مع إرسال الـ ID
+                    card += `
+                        <a href="article.html?id=${doc.id}" class="block text-center bg-slate-800 hover:bg-slate-700 text-white py-2.5 rounded-lg font-medium transition text-sm mt-auto border border-slate-700">
+                            ${data.type === 'app' ? 'التفاصيل / التحميل' : data.type === 'video' ? 'التفاصيل / المشاهدة' : 'قراءة المقال كامل'}
+                        </a>
+                      </div>`
+                    ;
+                    
+                    postsContainer.innerHTML += card
+                    
+                 ;  
                     // إضافة زر الرابط فقط إذا كان الرابط موجوداً
                     if (data.link && data.link.trim() !== '') {
                         card += `

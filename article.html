@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قراءة المقال | حسين سلمان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* تنسيق لتسهيل قراءة الأكواد والمقالات الطويلة */
+        #article-body {
+            white-space: pre-wrap; /* يحافظ على الفراغات والأسطر الجديدة */
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- الهيدر المصغر للرجوع -->
+    <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md p-4">
+        <div class="container mx-auto max-w-4xl flex justify-between items-center">
+            <h1 class="text-xl font-bold text-cyan-400">حسين سلمان</h1>
+            <a href="index.html" class="text-slate-400 hover:text-white transition flex items-center">
+                <i class="fa-solid fa-arrow-right ml-2"></i> العودة للرئيسية
+            </a>
+        </div>
+    </header>
+
+    <!-- منطقة عرض المقال -->
+    <main class="flex-grow container mx-auto px-4 py-12 max-w-4xl">
+        <div id="article-container" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-10 shadow-xl">
+            <!-- رسالة التحميل المبدئية -->
+            <div class="text-center text-slate-500 py-20" id="loading-msg">
+                <i class="fa-solid fa-spinner fa-spin text-4xl mb-4"></i><br>جاري جلب المقال...
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 text-center py-6 text-slate-500 text-sm mt-auto">
+        <p>&copy; 2026 حسين سلمان. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- سكربت جلب بيانات المقال بناءً على الـ ID -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // *** مفاتيح مشروعك في Firebase ***
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRzFck1Z5peOL7pYpuG7hUeyZUoycgCEU",
+            authDomain: "hussein-salman.firebaseapp.com",
+            projectId: "hussein-salman",
+            storageBucket: "hussein-salman.firebasestorage.app",
+            messagingSenderId: "862323992221",
+            appId: "1:862323992221:web:009cfd696d6f4142e91674",
+            measurementId: "G-GSVSR1HBKR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // دالة لجلب الـ ID من الرابط (مثال: article.html?id=12345)
+        function getArticleIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        async function loadArticle() {
+            const articleId = getArticleIdFromUrl();
+            const container = document.getElementById('article-container');
+
+            if (!articleId) {
+                container.innerHTML = '<div class="text-center text-red-500 py-10">عذراً، لم يتم العثور على المقال. (الرابط غير صحيح)</div>';
+                return;
+            }
+
+            try {
+                // جلب المستند (المقال) المحدد من Firestore
+                const docRef = doc(db, "portfolio_posts", articleId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // تنسيق التاريخ (إذا كان متوفراً)
+                    let dateStr = "تاريخ غير متوفر";
+                    if(data.createdAt) {
+                        const dateObj = data.createdAt.toDate();
+                        dateStr = dateObj.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+                    }
+
+                    // تحديد الأيقونة حسب النوع
+                    let typeIcon = data.type === 'app' ? '<i class="fa-brands fa-android text-emerald-400 ml-2"></i>' : 
+                                   data.type === 'video' ? '<i class="fa-brands fa-youtube text-red-400 ml-2"></i>' : 
+                                   '<i class="fa-solid fa-file-code text-indigo-400 ml-2"></i>';
+
+                    // بناء محتوى صفحة المقال
+                    let articleHTML = `
+                        <header class="mb-10 border-b border-slate-800 pb-6">
+                            <div class="flex items-center text-slate-400 text-sm mb-4">
+                                ${typeIcon}
+                                <span>${dateStr}</span>
+                            </div>
+                            <h1 class="text-3xl md:text-4xl font-bold text-white leading-snug">${data.title}</h1>
+                        </header>
+                        
+                        <!-- جسم المقال -->
+                        <div id="article-body" class="text-slate-300 text-lg leading-loose mb-12">${data.description}</div>
+                    `;
+
+                    // إذا كان هناك رابط (لتحميل أداة، أو مشاهدة فيديو) نضعه في الأسفل بشكل بارز
+                    if (data.link && data.link.trim() !== '') {
+                        let btnText = data.type === 'app' ? 'تحميل التطبيق / الأداة' : 
+                                      data.type === 'video' ? 'مشاهدة الفيديو' : 
+                                      'رابط المصدر / الأداة';
+                        
+                        articleHTML += `
+                            <div class="mt-10 p-6 bg-slate-950 border border-cyan-900 rounded-xl text-center">
+                                <h3 class="text-cyan-400 font-bold mb-4">روابط متعلقة بهذا المنشور:</h3>
+                                <a href="${data.link}" target="_blank" class="inline-block bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-lg transition shadow-lg shadow-cyan-900/50">
+                                    ${btnText} <i class="fa-solid fa-arrow-up-right-from-square mr-2 text-sm"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML = articleHTML;
+                    
+                    // تغيير عنوان الصفحة في المتصفح لاسم المقال
+                    document.title = data.title + " | حسين سلمان";
+
+                } else {
+                    container.innerHTML = '<div class="text-center text-red-500 py-10">عذراً، هذا المقال تم حذفه أو غير موجود.</div>';
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+                container.innerHTML = '<div class="text-center text-red-500 py-10">حدث خطأ أثناء تحميل المقال.</div>';
+            }
+        }
+
+        // تشغيل الدالة
+        loadArticle();
+    </script>
+</body>
+</html>

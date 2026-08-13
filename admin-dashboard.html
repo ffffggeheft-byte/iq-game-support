@@ -9,183 +9,154 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans">
 
-    <div class="container mx-auto p-4 max-w-3xl mt-10 pb-20">
+    <div class="container mx-auto p-4 max-w-4xl mt-10 pb-20">
         <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
-            <h1 class="text-3xl font-bold text-cyan-400"><i class="fa-solid fa-terminal ml-2"></i>لوحة الإدارة</h1>
+            <h1 class="text-3xl font-bold text-cyan-400"><i class="fa-solid fa-terminal ml-2"></i>مركز القيادة (Admin)</h1>
             <button id="logout-btn" class="bg-red-900/50 hover:bg-red-600 text-red-200 border border-red-800 px-4 py-2 rounded-lg font-bold transition">تسجيل الخروج</button>
         </div>
 
-        <!-- قسم إضافة محتوى جديد -->
-        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 mb-8 shadow-lg">
-            <h2 class="text-xl font-bold mb-6 border-r-4 border-cyan-500 pr-3">نشر محتوى جديد في الموقع</h2>
-            
-            <form id="publish-form" class="space-y-5">
-                <div>
-                    <label class="block text-slate-400 mb-1 text-sm">نوع المحتوى</label>
-                    <select id="type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500">
-                        <option value="app">تطبيق / أداة (APK)</option>
-                        <option value="video">فيديو (شروحات البرمجة والاختراق)</option>
-                        <option value="article">مقال أو ثغرة</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-slate-400 mb-1 text-sm">عنوان المحتوى</label>
-                    <input type="text" id="title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" required placeholder="مثال: تطبيق IQ++ الإصدار الجديد">
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- القسم الأول: روابط الحسابات الشخصية -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg h-fit">
+                <h2 class="text-xl font-bold mb-6 border-r-4 border-blue-500 pr-3">روابط حساباتي الشخصية</h2>
+                <form id="social-form" class="space-y-4">
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm"><i class="fa-brands fa-github"></i> رابط حساب GitHub</label>
+                        <input type="url" id="githubLink" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-blue-500" dir="ltr">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm"><i class="fa-brands fa-google-play"></i> رابط حساب متجر Play</label>
+                        <input type="url" id="playLink" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-blue-500" dir="ltr">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm"><i class="fa-solid fa-envelope"></i> البريد الإلكتروني (للتواصل)</label>
+                        <input type="email" id="contactEmail" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-blue-500" dir="ltr">
+                    </div>
+                    <button type="submit" id="save-social-btn" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition mt-2">حفظ الروابط</button>
+                </form>
+            </div>
 
-                <div>
-                    <label class="block text-slate-400 mb-1 text-sm">الوصف التفصيلي</label>
-                    <textarea id="description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" required placeholder="اكتب تفاصيل الأداة، أو محتوى المقال هنا..."></textarea>
-                </div>
-
-                <!-- لاحظ أننا أزلنا كلمة required من هنا ليصبح الرابط اختيارياً -->
-                <div>
-                    <label class="block text-slate-400 mb-1 text-sm">رابط التحميل أو المشاهدة (اختياري للمقالات)</label>
-                    <input type="url" id="link" class="w-full bg-slate-950 text-left border border-slate-800 rounded-lg p-3 focus:outline-none focus:border-cyan-500" dir="ltr" placeholder="https://...">
-                </div>
-
-                <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition mt-4"><i class="fa-solid fa-cloud-arrow-up ml-2"></i>نشر للموقع العام</button>
-            </form>
+            <!-- القسم الثاني: نشر المحتوى (تطبيقات، فيديوهات، مقالات) -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
+                <h2 class="text-xl font-bold mb-6 border-r-4 border-cyan-500 pr-3">نشر محتوى جديد</h2>
+                <form id="publish-form" class="space-y-4">
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">النوع</label>
+                        <select id="type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500">
+                            <option value="app">تطبيق / أداة (APK)</option>
+                            <option value="video">فيديو (شرح يوتيوب)</option>
+                            <option value="article">مقال / ثغرة</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">العنوان</label>
+                        <input type="text" id="title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">الوصف</label>
+                        <textarea id="description" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">الرابط (مهم جداً للفيديو والتطبيقات)</label>
+                        <input type="url" id="link" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" dir="ltr" placeholder="https://...">
+                    </div>
+                    <button type="submit" id="submit-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-lg transition">نشر للموقع العام</button>
+                </form>
+            </div>
         </div>
 
-        <!-- القسم الجديد: إدارة المحتوى المنشور (الحذف) -->
-        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
-            <h2 class="text-xl font-bold mb-6 border-r-4 border-red-500 pr-3">إدارة المحتوى المنشور</h2>
-            <div id="admin-posts-container" class="space-y-3">
-                <p class="text-slate-500 text-center"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب المنشورات...</p>
-            </div>
+        <!-- القسم الثالث: إدارة وحذف المحتوى -->
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg mt-8">
+            <h2 class="text-xl font-bold mb-6 border-r-4 border-red-500 pr-3">إدارة وحذف المحتوى المنشور</h2>
+            <div id="admin-posts-container" class="space-y-2"></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // تمت إضافة دوال جديدة هنا: doc, deleteDoc, getDocs, query, orderBy
-        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // *** مفاتيحك الخاصة ***
         const firebaseConfig = {
             apiKey: "AIzaSyDRzFck1Z5peOL7pYpuG7hUeyZUoycgCEU",
             authDomain: "hussein-salman.firebaseapp.com",
             projectId: "hussein-salman",
             storageBucket: "hussein-salman.firebasestorage.app",
             messagingSenderId: "862323992221",
-            appId: "1:862323992221:web:009cfd696d6f4142e91674",
-            measurementId: "G-GSVSR1HBKR"
+            appId: "1:862323992221:web:009cfd696d6f4142e91674"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // التحقق من تسجيل الدخول وجلب المنشورات
         onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'admin-login.html';
-            } else {
-                loadAdminPosts(); // استدعاء دالة جلب المنشورات بمجرد الدخول
+            if (!user) window.location.href = 'admin-login.html';
+            else { loadAdminPosts(); loadSocialLinks(); }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = 'admin-login.html'));
+
+        // جلب وحفظ روابط الحسابات
+        async function loadSocialLinks() {
+            const docRef = doc(db, "settings", "social_links");
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('githubLink').value = data.github || '';
+                document.getElementById('playLink').value = data.playstore || '';
+                document.getElementById('contactEmail').value = data.email || '';
             }
+        }
+
+        document.getElementById('social-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-social-btn');
+            btn.innerText = "جاري الحفظ...";
+            await setDoc(doc(db, "settings", "social_links"), {
+                github: document.getElementById('githubLink').value,
+                playstore: document.getElementById('playLink').value,
+                email: document.getElementById('contactEmail').value
+            });
+            btn.innerText = "تم الحفظ بنجاح!";
+            setTimeout(() => btn.innerText = "حفظ الروابط", 2000);
         });
 
-        // تسجيل الخروج
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = 'admin-login.html');
-        });
-
-        // دالة نشر محتوى جديد
+        // نشر المقالات والفيديوهات
         document.getElementById('publish-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerHTML = 'جاري النشر... <i class="fa-solid fa-spinner fa-spin"></i>';
-            btn.disabled = true;
-
-            const contentData = {
-                type: document.getElementById('type').value,
-                title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                link: document.getElementById('link').value,
-                createdAt: serverTimestamp()
-            };
-
+            btn.disabled = true; btn.innerText = 'جاري النشر...';
             try {
-                await addDoc(collection(db, "portfolio_posts"), contentData);
-                alert("تم النشر بنجاح!");
-                e.target.reset();
-                loadAdminPosts(); // تحديث قائمة المنشورات فوراً بعد النشر
-            } catch (error) {
-                alert("حدث خطأ: " + error.message);
-            } finally {
-                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up ml-2"></i>نشر للموقع العام';
-                btn.disabled = false;
-            }
+                await addDoc(collection(db, "portfolio_posts"), {
+                    type: document.getElementById('type').value,
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    link: document.getElementById('link').value,
+                    createdAt: serverTimestamp()
+                });
+                e.target.reset(); loadAdminPosts();
+            } catch (error) { alert(error.message); }
+            btn.disabled = false; btn.innerText = 'نشر للموقع العام';
         });
 
-        // ==========================================
-        // الدالة الجديدة: جلب وعرض المنشورات مع زر الحذف
-        // ==========================================
+        // عرض المنشورات لحذفها
         async function loadAdminPosts() {
             const container = document.getElementById('admin-posts-container');
-            try {
-                const q = query(collection(db, "portfolio_posts"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                container.innerHTML = ''; // مسح علامة التحميل
-
-                if (querySnapshot.empty) {
-                    container.innerHTML = '<p class="text-slate-500 text-center py-4">لا توجد منشورات حالياً.</p>';
-                    return;
-                }
-
-                querySnapshot.forEach((documentSnap) => {
-                    const data = documentSnap.data();
-                    const postId = documentSnap.id; // المعرف السري للمقال في قاعدة البيانات
-                    
-                    // ترجمة نوع المحتوى ليكون مفهوماً
-                    let typeAr = data.type === 'app' ? 'تطبيق' : data.type === 'video' ? 'فيديو' : 'مقال';
-
-                    // إنشاء شريط المنشور
-                    const postElement = document.createElement('div');
-                    postElement.className = "flex justify-between items-center bg-slate-950 border border-slate-800 p-4 rounded-lg";
-                    postElement.innerHTML = `
-                        <div class="overflow-hidden">
-                            <h3 class="font-bold text-white text-lg truncate">${data.title}</h3>
-                            <span class="text-xs text-slate-400">${typeAr}</span>
-                        </div>
-                        <button class="delete-btn bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white border border-red-900 hover:border-red-600 px-3 py-2 rounded transition ml-2 shrink-0" data-id="${postId}">
-                            <i class="fa-solid fa-trash-can"></i> حذف
-                        </button>
-                    `;
-                    container.appendChild(postElement);
-                });
-
-                // تفعيل أزرار الحذف بعد إنشائها
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const idToDelete = e.currentTarget.getAttribute('data-id');
-                        
-                        // رسالة تأكيد قبل الحذف الفعلي
-                        if (confirm("هل أنت متأكد من حذف هذا المحتوى نهائياً؟ لن تتمكن من التراجع.")) {
-                            e.currentTarget.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-                            e.currentTarget.disabled = true;
-                            
-                            try {
-                                // أمر الحذف من قاعدة بيانات Firebase
-                                await deleteDoc(doc(db, "portfolio_posts", idToDelete));
-                                loadAdminPosts(); // إعادة تحميل القائمة لتختفي فوراً
-                            } catch (error) {
-                                alert("خطأ في الحذف: " + error.message);
-                                e.currentTarget.innerHTML = '<i class="fa-solid fa-trash-can"></i> حذف';
-                                e.currentTarget.disabled = false;
-                            }
-                        }
-                    });
-                });
-
-            } catch (error) {
-                container.innerHTML = '<p class="text-red-500 text-center py-4">حدث خطأ في تحميل المنشورات.</p>';
-                console.error(error);
-            }
+            const q = query(collection(db, "portfolio_posts"), orderBy("createdAt", "desc"));
+            const snaps = await getDocs(q);
+            container.innerHTML = '';
+            snaps.forEach(snap => {
+                const data = snap.data();
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-950 p-3 rounded border border-slate-800">
+                        <span class="text-white truncate">${data.title}</span>
+                        <button class="text-red-500 hover:text-red-400" onclick="deletePost('${snap.id}')">حذف</button>
+                    </div>`;
+            });
+        }
+        window.deletePost = async (id) => {
+            if(confirm("تأكيد الحذف؟")) { await deleteDoc(doc(db, "portfolio_posts", id)); loadAdminPosts(); }
         }
     </script>
 </body>

@@ -9,67 +9,117 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans">
 
-    <div class="container mx-auto p-4 max-w-4xl mt-10 pb-20">
+    <div class="container mx-auto p-4 max-w-5xl mt-10 pb-20">
         <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
             <h1 class="text-3xl font-bold text-cyan-400"><i class="fa-solid fa-terminal ml-2"></i>مركز القيادة (Admin)</h1>
             <button id="logout-btn" class="bg-red-900/50 hover:bg-red-600 text-red-200 border border-red-800 px-4 py-2 rounded-lg font-bold transition">تسجيل الخروج</button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- القسم الأول: روابط الحسابات الشخصية -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- القسم الأول: روابط الحسابات الشخصية الموسعة -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg h-fit">
-                <h2 class="text-xl font-bold mb-6 border-r-4 border-blue-500 pr-3">روابط حساباتي الشخصية</h2>
-                <form id="social-form" class="space-y-4">
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm"><i class="fa-brands fa-github"></i> رابط حساب GitHub</label>
-                        <input type="url" id="githubLink" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-blue-500" dir="ltr">
+                <h2 class="text-xl font-bold mb-6 border-r-4 border-blue-500 pr-3">روابط حساباتي والتواصل</h2>
+                <form id="social-form" class="space-y-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-brands fa-github"></i> GitHub</label>
+                            <input type="url" id="githubLink" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-brands fa-google-play"></i> متجر Play</label>
+                            <input type="url" id="playLink" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-brands fa-telegram text-blue-400"></i> حساب تلغرام (الشخصي)</label>
+                            <input type="url" id="tgAccount" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr" placeholder="https://t.me/username">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-solid fa-bullhorn text-blue-400"></i> قناة تلغرام</label>
+                            <input type="url" id="tgChannel" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr" placeholder="https://t.me/channel">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-brands fa-instagram text-pink-500"></i> إنستغرام</label>
+                            <input type="url" id="instaLink" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-brands fa-tiktok text-white"></i> تيك توك</label>
+                            <input type="url" id="tiktokLink" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-brands fa-youtube text-red-500"></i> قناة يوتيوب</label>
+                            <input type="url" id="youtubeLink" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 text-xs"><i class="fa-solid fa-envelope text-yellow-500"></i> البريد الإلكتروني</label>
+                            <input type="email" id="contactEmail" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white text-sm focus:border-blue-500" dir="ltr">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm"><i class="fa-brands fa-google-play"></i> رابط حساب متجر Play</label>
-                        <input type="url" id="playLink" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-blue-500" dir="ltr">
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm"><i class="fa-solid fa-envelope"></i> البريد الإلكتروني (للتواصل)</label>
-                        <input type="email" id="contactEmail" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-blue-500" dir="ltr">
-                    </div>
-                    <button type="submit" id="save-social-btn" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition mt-2">حفظ الروابط</button>
+                    <button type="submit" id="save-social-btn" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 rounded transition mt-4">حفظ الروابط</button>
                 </form>
             </div>
 
-            <!-- القسم الثاني: نشر المحتوى (تطبيقات، فيديوهات، مقالات) -->
+            <!-- القسم الثاني: إضافة الشهادات (Certificates) -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg h-fit">
+                <h2 class="text-xl font-bold mb-6 border-r-4 border-yellow-500 pr-3">إضافة شهادة جديدة</h2>
+                <form id="cert-form" class="space-y-4">
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">اسم الشهادة / الكورس</label>
+                        <input type="text" id="certName" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-yellow-500" required placeholder="مثال: أساسيات الأمن السيبراني">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">الجهة المانحة (المؤسسة)</label>
+                        <input type="text" id="certIssuer" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-yellow-500" required placeholder="مثال: Google / Cisco">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-sm">رابط الشهادة (أو رابط الصورة)</label>
+                        <input type="url" id="certLink" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-yellow-500" dir="ltr" required placeholder="https://...">
+                    </div>
+                    <button type="submit" id="submit-cert-btn" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-lg transition">إضافة الشهادة للموقع</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- القسم الثالث: نشر المحتوى (تطبيقات، فيديوهات، مقالات) -->
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg mb-8">
+            <h2 class="text-xl font-bold mb-6 border-r-4 border-cyan-500 pr-3">نشر محتوى جديد</h2>
+            <form id="publish-form" class="space-y-4 max-w-2xl">
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">النوع</label>
+                    <select id="type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500">
+                        <option value="app">تطبيق / أداة (APK)</option>
+                        <option value="video">فيديو (شرح يوتيوب)</option>
+                        <option value="article">مقال / ثغرة</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">العنوان</label>
+                    <input type="text" id="title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" required>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">الوصف</label>
+                    <textarea id="description" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1 text-sm">الرابط (مهم جداً للفيديو والتطبيقات)</label>
+                    <input type="url" id="link" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" dir="ltr" placeholder="https://...">
+                </div>
+                <button type="submit" id="submit-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-lg transition">نشر للموقع العام</button>
+            </form>
+        </div>
+
+        <!-- القسم الرابع: إدارة وحذف المحتوى والشهادات -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
-                <h2 class="text-xl font-bold mb-6 border-r-4 border-cyan-500 pr-3">نشر محتوى جديد</h2>
-                <form id="publish-form" class="space-y-4">
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm">النوع</label>
-                        <select id="type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500">
-                            <option value="app">تطبيق / أداة (APK)</option>
-                            <option value="video">فيديو (شرح يوتيوب)</option>
-                            <option value="article">مقال / ثغرة</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm">العنوان</label>
-                        <input type="text" id="title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm">الوصف</label>
-                        <textarea id="description" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" required></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1 text-sm">الرابط (مهم جداً للفيديو والتطبيقات)</label>
-                        <input type="url" id="link" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:border-cyan-500" dir="ltr" placeholder="https://...">
-                    </div>
-                    <button type="submit" id="submit-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-lg transition">نشر للموقع العام</button>
-                </form>
+                <h2 class="text-xl font-bold mb-6 border-r-4 border-red-500 pr-3">إدارة المحتوى (مقالات/تطبيقات)</h2>
+                <div id="admin-posts-container" class="space-y-2"></div>
+            </div>
+            
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
+                <h2 class="text-xl font-bold mb-6 border-r-4 border-orange-500 pr-3">إدارة الشهادات</h2>
+                <div id="admin-certs-container" class="space-y-2"></div>
             </div>
         </div>
 
-        <!-- القسم الثالث: إدارة وحذف المحتوى -->
-        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg mt-8">
-            <h2 class="text-xl font-bold mb-6 border-r-4 border-red-500 pr-3">إدارة وحذف المحتوى المنشور</h2>
-            <div id="admin-posts-container" class="space-y-2"></div>
-        </div>
     </div>
 
     <script type="module">
@@ -92,19 +142,23 @@
 
         onAuthStateChanged(auth, (user) => {
             if (!user) window.location.href = 'admin-login.html';
-            else { loadAdminPosts(); loadSocialLinks(); }
+            else { loadAdminPosts(); loadAdminCerts(); loadSocialLinks(); }
         });
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = 'admin-login.html'));
 
-        // جلب وحفظ روابط الحسابات
+        // 1. إدارة الروابط الاجتماعية
         async function loadSocialLinks() {
-            const docRef = doc(db, "settings", "social_links");
-            const docSnap = await getDoc(docRef);
+            const docSnap = await getDoc(doc(db, "settings", "social_links"));
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 document.getElementById('githubLink').value = data.github || '';
                 document.getElementById('playLink').value = data.playstore || '';
+                document.getElementById('tgAccount').value = data.tgAccount || '';
+                document.getElementById('tgChannel').value = data.tgChannel || '';
+                document.getElementById('instaLink').value = data.insta || '';
+                document.getElementById('tiktokLink').value = data.tiktok || '';
+                document.getElementById('youtubeLink').value = data.youtube || '';
                 document.getElementById('contactEmail').value = data.email || '';
             }
         }
@@ -116,13 +170,18 @@
             await setDoc(doc(db, "settings", "social_links"), {
                 github: document.getElementById('githubLink').value,
                 playstore: document.getElementById('playLink').value,
+                tgAccount: document.getElementById('tgAccount').value,
+                tgChannel: document.getElementById('tgChannel').value,
+                insta: document.getElementById('instaLink').value,
+                tiktok: document.getElementById('tiktokLink').value,
+                youtube: document.getElementById('youtubeLink').value,
                 email: document.getElementById('contactEmail').value
             });
             btn.innerText = "تم الحفظ بنجاح!";
             setTimeout(() => btn.innerText = "حفظ الروابط", 2000);
         });
 
-        // نشر المقالات والفيديوهات
+        // 2. إدارة المحتوى (مقالات وغيرها)
         document.getElementById('publish-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -140,7 +199,6 @@
             btn.disabled = false; btn.innerText = 'نشر للموقع العام';
         });
 
-        // عرض المنشورات لحذفها
         async function loadAdminPosts() {
             const container = document.getElementById('admin-posts-container');
             const q = query(collection(db, "portfolio_posts"), orderBy("createdAt", "desc"));
@@ -149,14 +207,51 @@
             snaps.forEach(snap => {
                 const data = snap.data();
                 container.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-950 p-3 rounded border border-slate-800">
+                    <div class="flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800 text-sm">
                         <span class="text-white truncate">${data.title}</span>
-                        <button class="text-red-500 hover:text-red-400" onclick="deletePost('${snap.id}')">حذف</button>
+                        <button class="text-red-500 hover:text-red-400 ml-2" onclick="deleteDocById('portfolio_posts', '${snap.id}', loadAdminPosts)">حذف</button>
                     </div>`;
             });
         }
-        window.deletePost = async (id) => {
-            if(confirm("تأكيد الحذف؟")) { await deleteDoc(doc(db, "portfolio_posts", id)); loadAdminPosts(); }
+
+        // 3. إدارة الشهادات (القسم الجديد)
+        document.getElementById('cert-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-cert-btn');
+            btn.disabled = true; btn.innerText = 'جاري الإضافة...';
+            try {
+                await addDoc(collection(db, "portfolio_certs"), {
+                    name: document.getElementById('certName').value,
+                    issuer: document.getElementById('certIssuer').value,
+                    link: document.getElementById('certLink').value,
+                    createdAt: serverTimestamp()
+                });
+                e.target.reset(); loadAdminCerts();
+            } catch (error) { alert(error.message); }
+            btn.disabled = false; btn.innerText = 'إضافة الشهادة للموقع';
+        });
+
+        async function loadAdminCerts() {
+            const container = document.getElementById('admin-certs-container');
+            const q = query(collection(db, "portfolio_certs"), orderBy("createdAt", "desc"));
+            const snaps = await getDocs(q);
+            container.innerHTML = '';
+            snaps.forEach(snap => {
+                const data = snap.data();
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800 text-sm">
+                        <span class="text-white truncate">${data.name} - <span class="text-slate-500">${data.issuer}</span></span>
+                        <button class="text-red-500 hover:text-red-400 ml-2" onclick="deleteDocById('portfolio_certs', '${snap.id}', loadAdminCerts)">حذف</button>
+                    </div>`;
+            });
+        }
+
+        // دالة حذف عامة
+        window.deleteDocById = async (colName, id, callback) => {
+            if(confirm("تأكيد الحذف نهائياً؟")) { 
+                await deleteDoc(doc(db, colName, id)); 
+                callback(); 
+            }
         }
     </script>
 </body>

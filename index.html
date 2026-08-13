@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حسين سلمان | باحث أمن سيبراني ومطور</title>
+    <title>فراغ| علوم أمن سيبراني ومطور</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .post-card { display: flex; }
         .hidden-card { display: none !important; }
+        /* تنسيق قسم الشهادات */
+        .cert-card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <!-- الهيدر والتعريف -->
+    <!-- الهيدر والتعريف الشامل -->
     <header class="border-b border-slate-800 bg-slate-900/50 relative z-10">
         <div class="container mx-auto px-4 py-16 text-center max-w-4xl">
             <img src="https://ui-avatars.com/api/?name=Hussain+Salman&background=0D8B93&color=fff&size=120" alt="حسين سلمان" class="mx-auto rounded-full mb-4 border-4 border-cyan-800 shadow-[0_0_20px_rgba(13,139,147,0.3)]">
             <h1 class="text-4xl font-extrabold text-white mb-2">حسين سلمان</h1>
             <p class="text-cyan-400 font-medium mb-4"><i class="fa-solid fa-shield-halved ml-1"></i> طالب أمن سيبراني - الجامعة التكنولوجية</p>
-            <p class="text-slate-400 text-sm leading-relaxed mb-6">مطور تطبيقات وباحث في مجال أمن المعلومات والبرمجيات.</p>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">مطور تطبيقات (Flutter / Godot) وباحث في مجال أمن المعلومات والبرمجيات.</p>
             
-            <!-- حاوية الحسابات الشخصية (تُجلب من السيرفر) -->
-            <div id="social-links-container" class="flex justify-center gap-4 mb-8">
+            <!-- حاوية الحسابات الشخصية الشاملة -->
+            <div id="social-links-container" class="flex flex-wrap justify-center gap-3 mb-8">
                 <!-- سيتم حقن الأزرار هنا من Firebase -->
             </div>
             
@@ -34,7 +36,17 @@
         </div>
     </header>
 
-    <!-- أزرار الفلترة الذكية -->
+    <!-- القسم الجديد: الشهادات والإنجازات (سيتم إخفاؤه إذا لم توجد شهادات) -->
+    <section id="certs-section" class="bg-slate-900/30 border-b border-slate-800 py-10 hidden">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <h2 class="text-2xl font-bold mb-6 border-r-4 border-yellow-500 pr-3 text-yellow-400">الشهادات المعتمدة والإنجازات</h2>
+            <div id="certs-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- سيتم حقن الشهادات هنا -->
+            </div>
+        </div>
+    </section>
+
+    <!-- أزرار الفلترة الذكية للمحتوى -->
     <div class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 flex justify-center gap-2 py-3 overflow-x-auto">
             <button class="filter-btn active bg-cyan-700 text-white px-4 py-1.5 rounded-full text-sm font-bold transition" data-filter="all">الكل</button>
@@ -44,7 +56,7 @@
         </div>
     </div>
 
-    <!-- شبكة المحتوى -->
+    <!-- شبكة المحتوى (التطبيقات والمقالات) -->
     <main class="flex-grow py-10 container mx-auto px-4 max-w-7xl relative z-0">
         <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="col-span-full text-center text-slate-500 py-10"><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><br>تحميل النظام...</div>
@@ -52,7 +64,7 @@
     </main>
 
     <footer class="bg-slate-950 border-t border-slate-900 text-center py-6 text-slate-600 text-sm mt-auto">
-        <p>&copy; 2026 حسين سلمان (UOT).</p>
+        <p>&copy; 2026 حسين سلمان (UOT). جميع الحقوق محفوظة.</p>
     </footer>
 
     <script type="module">
@@ -71,21 +83,60 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 1. جلب حساباتك الشخصية من السيرفر
+        // 1. جلب حساباتك الشخصية
         async function fetchSocialLinks() {
             const docSnap = await getDoc(doc(db, "settings", "social_links"));
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 const container = document.getElementById('social-links-container');
                 let html = '';
-                if(data.github) html += `<a href="${data.github}" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-slate-700 transition" title="GitHub"><i class="fa-brands fa-github text-lg"></i></a>`;
-                if(data.playstore) html += `<a href="${data.playstore}" target="_blank" class="w-10 h-10 rounded-full bg-emerald-900/50 text-emerald-400 flex items-center justify-center border border-emerald-800 hover:bg-emerald-800 transition" title="Google Play"><i class="fa-brands fa-google-play text-lg"></i></a>`;
-                if(data.email) html += `<a href="mailto:${data.email}" class="w-10 h-10 rounded-full bg-red-900/50 text-red-400 flex items-center justify-center border border-red-800 hover:bg-red-800 transition" title="إرسال إيميل"><i class="fa-solid fa-envelope text-lg"></i></a>`;
+                
+                // قالب الزر العام
+                const btn = (link, icon, colorClass, title) => {
+                    if(!link) return '';
+                    return `<a href="${link}" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center border transition ${colorClass}" title="${title}"><i class="${icon} text-lg"></i></a>`;
+                };
+
+                html += btn(data.github, 'fa-brands fa-github', 'bg-slate-800 text-white border-slate-700 hover:bg-slate-700', 'GitHub');
+                html += btn(data.playstore, 'fa-brands fa-google-play', 'bg-emerald-900/30 text-emerald-400 border-emerald-800 hover:bg-emerald-900/60', 'Google Play');
+                html += btn(data.tgAccount, 'fa-brands fa-telegram', 'bg-blue-900/30 text-blue-400 border-blue-800 hover:bg-blue-900/60', 'حساب تلغرام');
+                html += btn(data.tgChannel, 'fa-solid fa-bullhorn', 'bg-sky-900/30 text-sky-400 border-sky-800 hover:bg-sky-900/60', 'قناة تلغرام');
+                html += btn(data.insta, 'fa-brands fa-instagram', 'bg-pink-900/30 text-pink-400 border-pink-800 hover:bg-pink-900/60', 'إنستغرام');
+                html += btn(data.tiktok, 'fa-brands fa-tiktok', 'bg-slate-800 text-white border-slate-700 hover:bg-slate-700', 'تيك توك');
+                html += btn(data.youtube, 'fa-brands fa-youtube', 'bg-red-900/30 text-red-400 border-red-800 hover:bg-red-900/60', 'يوتيوب');
+                html += btn(data.email ? `mailto:${data.email}` : null, 'fa-solid fa-envelope', 'bg-yellow-900/30 text-yellow-400 border-yellow-800 hover:bg-yellow-900/60', 'إيميل');
+                
                 container.innerHTML = html;
             }
         }
 
-        // تحويل رابط يوتيوب العادي إلى رابط دمج (Embed)
+        // 2. جلب الشهادات
+        async function fetchCerts() {
+            const container = document.getElementById('certs-container');
+            const section = document.getElementById('certs-section');
+            const q = query(collection(db, "portfolio_certs"), orderBy("createdAt", "desc"));
+            const snaps = await getDocs(q);
+            
+            if (!snaps.empty) {
+                section.classList.remove('hidden'); // إظهار القسم إذا كانت هناك شهادات
+                snaps.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    let card = `
+                        <a href="${data.link}" target="_blank" class="cert-card bg-slate-900 border border-slate-800 rounded-lg p-4 flex items-center gap-4 transition duration-300 hover:border-yellow-600/50 shadow-sm">
+                            <div class="w-12 h-12 rounded-full bg-yellow-900/20 flex items-center justify-center text-yellow-500 shrink-0">
+                                <i class="fa-solid fa-certificate text-xl"></i>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h4 class="text-white font-bold text-sm truncate">${data.name}</h4>
+                                <p class="text-slate-400 text-xs mt-1 truncate">${data.issuer}</p>
+                            </div>
+                        </a>
+                    `;
+                    container.innerHTML += card;
+                });
+            }
+        }
+
         function getYoutubeEmbed(url) {
             if(!url) return null;
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -93,7 +144,7 @@
             return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
         }
 
-        // 2. جلب المحتوى
+        // 3. جلب المحتوى الرئيسي
         async function fetchPosts() {
             const container = document.getElementById('posts-container');
             const q = query(collection(db, "portfolio_posts"), orderBy("createdAt", "desc"));
@@ -104,7 +155,6 @@
             snaps.forEach((docSnap) => {
                 const data = docSnap.data();
                 
-                // تصميم مخصص لكل نوع
                 let mediaHTML = '';
                 if(data.type === 'video' && data.link) {
                     const embedUrl = getYoutubeEmbed(data.link);
@@ -132,7 +182,7 @@
             });
         }
 
-        // تشغيل نظام الفلترة
+        // الفلترة والبحث
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.filter-btn').forEach(b => {
@@ -150,7 +200,6 @@
             });
         });
 
-        // تشغيل نظام البحث الحي
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             document.querySelectorAll('.post-card').forEach(card => {
@@ -160,7 +209,9 @@
             });
         });
 
+        // تشغيل كل الوظائف عند تحميل الصفحة
         fetchSocialLinks();
+        fetchCerts();
         fetchPosts();
     </script>
 </body>
